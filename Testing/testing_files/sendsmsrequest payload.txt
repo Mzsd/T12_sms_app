@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<message xmlns="http://www.logobject.ch/schema-ns/jmsoverxml">
+  <meta>
+    <type>sendSmsRequest</type>
+    <expectResponse>true</expectResponse>
+  </meta>
+  <properties>
+    <property type="string" name="username" value="Dobre.Vanessa" />
+    <property type="string" name="token" value="14a4f3d1-c0ca-40bc-aff7-e6cc1640ed29" />
+    <property type="string" name="userprofile" value="Innendienst Disponent (FS)" />
+    <property type="string" name="txtimeout" value="60" />
+  </properties>
+  <body>
+    <entity class="ch.logobject.mlogistics.bl.msg.SendSmsRequest" xmlns="">
+      <field name="emailTemplate" value="SMS_KUNDE_RÜCKRUFBITTE" />
+      <field name="messageText" value="Hallo Vodafone-Kund:in, leider haben wir Dich nicht erreicht. Ruf uns bitte an, um Deinen Termin mit dem Technik-Service zu vereinbaren: 0771 8006460 Vielen Dank! Freundliche Grüße, Dein Vodafone-Team" />
+      <field name="messageType" value="task" />
+      <field name="mobileNumbers" value="{'+4915161302414'}" />
+      <field name="taskId" value="9373412" />
+    </entity>
+  </body>
+</message>

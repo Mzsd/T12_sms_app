@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<message
+	xmlns="http://www.logobject.ch/schema-ns/jmsoverxml">  
+	<meta>    
+		<type>bindEMailTemplateRequest</type>    
+		<expectResponse>true</expectResponse>  
+	</meta>  
+	<properties>    
+		<property type="string" name="username" value="Dobre.Vanessa" />    
+		<property type="string" name="token" value="{session}" />    
+		<property type="string" name="userprofile" value="{profile}" />    
+		<property type="string" name="txtimeout" value="60" />  
+	</properties>  
+	<body>    
+		<entity class="ch.logobject.mlogistics.bl.msg.BindEMailTemplateRequest"
+			xmlns="">      
+			<field name="bodyText" value="Hallo Vodafone-Kund:in, leider haben wir Dich nicht erreicht. Ruf uns bitte an, um Deinen Termin mit dem Technik-Service zu vereinbaren: $RegionContact.Contact(CONTACT).contactInformation.phone$ Vielen Dank! Freundliche Grüße, Dein Vodafone-Team" />      
+			<field name="emailTemplateId" value="44" />      
+			<field name="taskId" value="9387262" />    
+		</entity>  
+	</body>
+</message>

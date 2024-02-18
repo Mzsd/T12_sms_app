@@ -1,0 +1,22 @@
+{
+    "user": "Dobre.Vanessa",
+    "passw": "BKSSolutions2023!",
+    "userid": "10826",
+
+    "sender_email": "bksreporting@yahoo.com",
+    "recipients": ["reporting@bks-solutions.de"],
+
+    "filters": ["sms_orders.xml"],
+    "stages_sms":   [ 
+                        "sms_template_filter.xml", 
+                        "send_sms_request_one.xml", 
+                        "sms_add_work_order_comments.xml"
+                    ],
+
+    "password": "qftakxskegewhmpi",
+    "smtp_url": "smtp.mail.yahoo.com",
+    "smtp_port": 587,
+
+    "subject": "SMS App - TESTING",
+    "comment": ""
+}

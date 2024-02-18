@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<QueryRequest>
+  <query>ch.logobject.dart.unitymedia.taskManagement.QrUMOrderOverview</query>
+  <username>Dobre.Vanessa</username>
+  <token>8e53678d-6322-4bec-8d58-e56477a6da25</token>
+  <profile>Innendienst Disponent (FS)</profile>
+  <resultJSON>true</resultJSON>
+  <blobToFile>false</blobToFile>
+  <maxRecord>300</maxRecord>
+  <retrieveCount>false</retrieveCount>
+  <additionalClause>
+    <item> and STATEVALUE = :SP_STATEVALUE1</item>
+    <item> and (OWNERSHIP NOT LIKE :SP_OWNERSHIP0 OR OWNERSHIP IS NULL )</item>
+    <item> and ISCOMPLEXORDERSUBORDER = :SP_ISCOMPLEXORDERSUBORDER1</item>
+    <item> and RELATEDCOMPLEXORDERID IS NULL</item>
+    <item> and UPPER(PHONE2) LIKE UPPER(:SP_PHONE21)</item>
+    <item> and (UPPER(WOTYPE) NOT LIKE :SP_WOTYPE0 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE1 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE2 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE3 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE4 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE5 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE6 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE7 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE8 and UPPER(WOTYPE) NOT LIKE :SP_WOTYPE9 OR UPPER(WOTYPE) IS NULL )</item>
+    <item> and BUSINESSUNITID IN (:SP_BUSINESSUNITID)</item>
+  </additionalClause>
+  <parameters>
+    <param name="SP_STATEVALUE1" type="string">50</param>
+    <param name="SP_OWNERSHIP0" type="string">%Genehmigung, LOGISTIK, 2 Mann Termin%</param>
+    <param name="SP_ISCOMPLEXORDERSUBORDER1" type="string">0</param>
+    <param name="SP_PHONE21" type="string">+491%</param>
+    <param name="SP_WOTYPE0" type="string">%TBA%</param>
+    <param name="SP_WOTYPE1" type="string">%TBN%</param>
+    <param name="SP_WOTYPE2" type="string">%NE3%</param>
+    <param name="SP_WOTYPE3" type="string">%NFA%</param>
+    <param name="SP_WOTYPE4" type="string">%RFA%</param>
+    <param name="SP_WOTYPE5" type="string">%EN1%</param>
+    <param name="SP_WOTYPE6" type="string">%EN2%</param>
+    <param name="SP_WOTYPE7" type="string">%EN3%</param>
+    <param name="SP_WOTYPE8" type="string">%EN4%</param>
+    <param name="SP_WOTYPE9" type="string">%SZT%</param>
+    <param name="SP_BUSINESSUNITID" type="stringArray">590,595</param>
+  </parameters>
+</QueryRequest>

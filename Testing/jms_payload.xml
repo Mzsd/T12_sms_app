@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<message xmlns="http://www.logobject.ch/schema-ns/jmsoverxml">
+    <meta>
+        <type>type</type>
+        <expectResponse>true</expectResponse>
+    </meta>
+    <properties>
+        <property type="string" name="username" value="user" />
+        <property type="string" name="token" value="token" />
+        <property type="string" name="userprofile" value="profile" />
+        <property type="string" name="txtimeout" value="60" />
+    </properties>
+    <body>
+        <entity class="entity" xmlns="">
+        </entity>
+    </body>
+</message>

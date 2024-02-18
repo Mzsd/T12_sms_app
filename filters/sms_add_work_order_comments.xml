@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<message xmlns="http://www.logobject.ch/schema-ns/jmsoverxml">
+  <meta>
+    <type>AddWorkOrderComments</type>
+    <expectResponse>true</expectResponse>
+  </meta>
+  <properties>
+    <property type="string" name="username" value="Dobre.Vanessa" />
+    <property type="string" name="token" value="48d9b0c1-c9d5-4d9f-9a84-d217fe1fa0cd" />
+    <property type="string" name="userprofile" value="Innendienst Disponent (FS)" />
+    <property type="string" name="txtimeout" value="60" />
+  </properties>
+  <body>
+    <entity class="ch.logobject.um.bl.msg.AddWorkOrderComments" xmlns="">
+      <field name="comments" value="SMS versendet" />
+      <field name="taskId" value="8728921" />
+    </entity>
+  </body>
+</message>

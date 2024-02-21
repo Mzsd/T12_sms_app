@@ -1,6 +1,6 @@
-from mlog import Mlog
+from src.mlog import Mlog
 from glob import glob
-from filter import Filter
+from src.filter import Filter
 
 import os
 import requests

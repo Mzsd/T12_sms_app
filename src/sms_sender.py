@@ -4,7 +4,9 @@ from src.filter import Filter
 
 import os
 import requests
+import datetime
 import pandas as pd
+import src.email_sender as es
 
 
 class SmsSender(Mlog):
@@ -14,15 +16,12 @@ class SmsSender(Mlog):
         if config_file:
             self.config = self.get_json_data(config_file)
 
-    def __fetch_orders(self, orders_filter_payload:Filter) -> pd.DataFrame:
-        
+    def fetch_orders(self, orders_filter_payload:Filter) -> pd.DataFrame:
+        print("[+] Fetching Orders...")
         query = "ch.logobject.dart.unitymedia.taskManagement.QrUMOrderOverview"
         url = f'https://mlog.unitymedia.de/queryExecution/queryExecution;{query}'
-        orders_request = requests.post( url,
-            headers=self.headers['headers'],
-            data=orders_filter_payload,
-            verify=False
-        )
+        
+        orders_request = requests.post(url, headers=self.headers['headers'], data=str(orders_filter_payload))
 
         order_columns = [colid['name'] for colid in orders_request.json()['metadata']]
         order_data = orders_request.json()['data']
@@ -70,7 +69,10 @@ class SmsSender(Mlog):
             filter_payload = self.load_request_payload(os.path.join(self.filter_folder, filter))
             orders_filter_payload = Filter(order_login_details, filter_payload).get_filter()
             
-            self.orders_df = self.__fetch_orders(orders_filter_payload)            
+            filename = f'{datetime.datetime.utcnow().strftime("%y-%m-%d %H_%M_%S")}.xlsx'
+            output_file_path = os.path.join(os.getcwd(), self.output_folder, filename)
+            
+            self.orders_df = self.fetch_orders(orders_filter_payload)            
             
             for _, row in self.orders_df.iterrows():
                 print("\n")
@@ -117,5 +119,15 @@ class SmsSender(Mlog):
 
                     if sms_req.status_code != 200:
                         print(f"[-] SMS Sending Stage {k+1}: Failed!")
-                        
-                    
+            
+            output_folder_path = os.path.join(os.getcwd(), self.output_folder)
+            if not os.path.exists(output_folder_path):
+                os.makedirs(output_folder_path)
+            
+            self.orders_df.to_excel(output_file_path)
+            
+            es.send_mail(
+                config=self.config,
+                filename=filename + '.xlsx',
+                path=os.path.join(os.getcwd(), output_file_path)
+            )

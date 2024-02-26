@@ -9,7 +9,7 @@ import os
 class Mlog():
 
     def __init__(self) -> None:
-        config_path = os.path.join("configs", "config.json")
+        config_path = os.path.join(os.getcwd(), "configs", "config.json")
         self.config = self.get_json_data(config_path)
         self.headers = self.get_json_data("payload_data.json")
         self.authenticate()

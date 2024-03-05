@@ -1,10 +1,13 @@
-from src.mlog import Mlog
 from glob import glob
+from src.mlog import Mlog
 from src.filter import Filter
 
 import os
+import logging
 import requests
+import datetime
 import pandas as pd
+import src.email_sender as es
 
 
 class SmsSender(Mlog):
@@ -14,15 +17,32 @@ class SmsSender(Mlog):
         if config_file:
             self.config = self.get_json_data(config_file)
 
-    def __fetch_orders(self, orders_filter_payload:Filter) -> pd.DataFrame:
+        # Create a logs directory if it doesn't exist
+        logs_dir = "logs"
+        os.makedirs(logs_dir, exist_ok=True)
+
+        # Set up logging configuration
+        log_file = os.path.join(logs_dir, f"log_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.txt")
+        logging.basicConfig(filename=log_file, level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+        # Create a console handler and set its level to INFO
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(logging.INFO)
+
+        # Create a formatter and add it to the console handler
+        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
+        console_handler.setFormatter(formatter)
+
+        # Add the console handler to the root logger
+        logging.getLogger().addHandler(console_handler)
+
         
+    def fetch_orders(self, orders_filter_payload:Filter) -> pd.DataFrame:
+        logging.info("[+] Fetching Orders...")
         query = "ch.logobject.dart.unitymedia.taskManagement.QrUMOrderOverview"
         url = f'https://mlog.unitymedia.de/queryExecution/queryExecution;{query}'
-        orders_request = requests.post( url,
-            headers=self.headers['headers'],
-            data=orders_filter_payload,
-            verify=False
-        )
+        
+        orders_request = requests.post(url, headers=self.headers['headers'], data=str(orders_filter_payload))
 
         order_columns = [colid['name'] for colid in orders_request.json()['metadata']]
         order_data = orders_request.json()['data']
@@ -70,12 +90,15 @@ class SmsSender(Mlog):
             filter_payload = self.load_request_payload(os.path.join(self.filter_folder, filter))
             orders_filter_payload = Filter(order_login_details, filter_payload).get_filter()
             
-            self.orders_df = self.__fetch_orders(orders_filter_payload)            
+            filename = f'{datetime.datetime.utcnow().strftime("%y-%m-%d %H_%M_%S")}.xlsx'
+            output_file_path = os.path.join(os.getcwd(), self.output_folder, filename)
+            
+            self.orders_df = self.fetch_orders(orders_filter_payload)            
             
             for _, row in self.orders_df.iterrows():
-                print("\n")
-                print("[+] TaskID:", row['TASKID'])
-                print("[+] Phone:", row['PHONE2'])
+                logging.info("\n")
+                logging.info(f"[+] TaskID: {row['TASKID']}")
+                logging.info(f"[+] Phone: {row['PHONE2']}")
                 for k, stage in enumerate(self.config['stages_sms']):
                     
                     stage_payload = self.load_request_payload(os.path.join(self.filter_folder, stage))
@@ -113,9 +136,19 @@ class SmsSender(Mlog):
                                     self.headers['headers'])
 
                     if k == 1 and sms_req.status_code == 200:
-                        print(f"[+] SMS Sent Successfully!")
+                        logging.info(f"[+] SMS Sent Successfully!")
 
                     if sms_req.status_code != 200:
-                        print(f"[-] SMS Sending Stage {k+1}: Failed!")
-                        
-                    
+                        logging.info(f"[-] SMS Sending Stage {k+1}: Failed!")
+            
+            output_folder_path = os.path.join(os.getcwd(), self.output_folder)
+            if not os.path.exists(output_folder_path):
+                os.makedirs(output_folder_path)
+            
+            self.orders_df.to_excel(output_file_path)
+            
+            es.send_mail(
+                config=self.config,
+                filename=filename + '.xlsx',
+                path=os.path.join(os.getcwd(), output_file_path)
+            )

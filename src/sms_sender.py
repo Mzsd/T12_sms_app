@@ -131,15 +131,15 @@ class SmsSender(Mlog):
                         
                     taskid_field.attrs['value'] = f"{row['TASKID']}"
                     
-                    sms_req = self.__request_api(query, 
-                                    str(sms_stage_payload), 
-                                    self.headers['headers'])
+                    # sms_req = self.__request_api(query, 
+                    #                 str(sms_stage_payload), 
+                    #                 self.headers['headers'])
 
-                    if k == 1 and sms_req.status_code == 200:
-                        logging.info(f"[+] SMS Sent Successfully!")
+                    # if k == 1 and sms_req.status_code == 200:
+                    #     logging.info(f"[+] SMS Sent Successfully!")
 
-                    if sms_req.status_code != 200:
-                        logging.info(f"[-] SMS Sending Stage {k+1}: Failed!")
+                    # if sms_req.status_code != 200:
+                    #     logging.info(f"[-] SMS Sending Stage {k+1}: Failed!")
             
             output_folder_path = os.path.join(os.getcwd(), self.output_folder)
             if not os.path.exists(output_folder_path):

@@ -1,7 +1,9 @@
 {
     "user": "Dobre.Vanessa",
-    "passw": "BKSSolutions2023!",
+    "token": "4431e39d-bbfc-496e-9f66-7bb4b659ef8d",
     "userid": "10826",
+
+    "location": "C:\\Users\\muzam\\AppData\\Local\\Google\\Chrome\\User Data\\Sessions",
 
     "sender_email": "bksreporting@yahoo.com",
     "recipients": ["reporting@bks-solutions.de"],

@@ -1,3 +1,4 @@
+from src.selenium_authenticator import authenticator
 from bs4 import BeautifulSoup as bs4
 
 import xmltodict
@@ -9,8 +10,8 @@ import os
 class Mlog():
 
     def __init__(self) -> None:
-        config_path = os.path.join(os.getcwd(), "configs", "config.json")
-        self.config = self.get_json_data(config_path)
+        self.config_path = os.path.join(os.getcwd(), "configs", "config.json")
+        self.config = self.get_json_data(self.config_path)
         self.headers = self.get_json_data("payload_data.json")
         self.authenticate()
 
@@ -44,11 +45,26 @@ class Mlog():
 
         return order_dict
 
-    def authenticate(self):
+    def fetch_profile(self, auth_requests, valid_token=False):
+        text_dict = xmltodict.parse(auth_requests.text)
+        if 'errorCode' in text_dict['profiles']:
+            print('[-] Invalid token, refetching token...')
+        else:
+            valid_token = True
+            print('[+] Valid token')
+            self.profile =  text_dict['profiles']['profile'][-1] \
+                            if type(text_dict['profiles']['profile']) == list \
+                            else text_dict['profiles']['profile']
 
+        return valid_token
+
+    def authenticate(self):
+        
+        self.session = self.config['token']
+        valid_token = False
         data =  {
             "username": self.config['user'],
-            "password": self.config['passw'],
+            "token": self.session,
             "client": "mRIC"
         }
 
@@ -56,12 +72,18 @@ class Mlog():
                                         data=data, 
                                         headers=self.headers['headersAuthentication'],
                                         verify=False)
+        x = 3
+        while not valid_token and x:        
+            valid_token = self.fetch_profile(auth_requests)
+            
+            if not valid_token:
+                self.session = authenticator(self.config['location'])
+            x -= 1
         
-        text_dict = xmltodict.parse(auth_requests.text)
-        self.session = text_dict['profiles']['session']
-        self.profile =  text_dict['profiles']['profile'][-1] \
-                        if type(text_dict['profiles']['profile']) == list \
-                        else text_dict['profiles']['profile']
-
+        if valid_token:
+            with open(self.config_path, 'w') as f:
+                self.config['token'] = self.session
+                json.dump(self.config, f, indent=4)
+        
     def fetch_data(self):
         pass

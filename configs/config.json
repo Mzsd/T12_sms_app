@@ -17,6 +17,6 @@
     "smtp_url": "smtp.mail.yahoo.com",
     "smtp_port": 587,
 
-    "subject": "SMS App - TESTING",
-    "comment": ""
+    "subject": "SMS App",
+    "comment": "abc"
 }
